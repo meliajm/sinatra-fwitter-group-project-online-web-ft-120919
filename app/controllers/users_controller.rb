@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
 
     get '/' do
-        erb :index
+        if logged_in?
+            redirect '/tweets'
+        else
+            erb :index
+        end
     end
     
     get '/signup' do
@@ -40,12 +44,13 @@ class UsersController < ApplicationController
     end
 
     post '/login' do
-        binding.pry
+        # binding.pry
         @user = User.find_by(:username => params[:username])
         if @user != nil && @user.authenticate(params[:password])
             session[:user_id] = @user.id
             redirect "/tweets"
         end
+        redirect '/signup' if !logged_in? 
     end
 
     # get '/tweets' do
@@ -61,7 +66,8 @@ class UsersController < ApplicationController
             session.clear
             redirect '/login'
         else
-            erb :index
+            # erb :index
+            redirect '/'
         end
     end
 
