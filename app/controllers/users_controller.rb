@@ -24,13 +24,15 @@ class UsersController < ApplicationController
         # if !params[:username]=="" && !params[:email].empty? && !params[:password].empty? 
         #     @user = User.new(username: params[:username], email: params[:email], password: params[:password])
         # end 
+       
+        # binding.pry
         if params[:username]=="" || params[:email]=="" || params[:password]==""
             redirect '/signup'
         end
-
         @user = User.create(username: params[:username], email: params[:email], password: params[:password])
+        
         session[:user_id] = @user.id
-        redirect to "/tweets"
+        redirect "/tweets"
         # if @user.save
         #     session[:user_id] = @user.id
         #     # binding.pry
@@ -76,6 +78,14 @@ class UsersController < ApplicationController
             redirect '/'
         end
     end
+
+    # get "/users/#{user.slug}" do 
+    #     "hellow"
+    get "/users/:slug" do
+        @user = User.find_by_slug(params[:slug])
+        erb :'users/show'
+    end
+    # end
 
     
 
